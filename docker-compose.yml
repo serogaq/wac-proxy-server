@@ -1,0 +1,25 @@
+version: '3.7'
+
+networks:
+    nginx_net:
+        name: nginx_net
+
+services:
+    nginx:
+        container_name: nginx
+        build: .
+        restart: unless-stopped
+        environment:
+            - CERTBOT_EMAIL=${CERTBOT_EMAIL}
+            - STAGING=${STAGING}
+            - DHPARAM_SIZE=${DHPARAM_SIZE}
+            - RSA_KEY_SIZE=${RSA_KEY_SIZE}
+            - RENEWAL_INTERVAL=${RENEWAL_INTERVAL}
+        volumes:
+            - ./letsencrypt:/etc/letsencrypt
+            - ./nginx_conf.d/:/etc/nginx/conf.d/
+        networks:
+            nginx_net:
+        ports:
+            - 80:80
+            - 443:443
